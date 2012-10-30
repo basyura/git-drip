@@ -14,7 +14,13 @@ dist = ARGV[0]
 
 `git status -s`.each_line do |line|
   src = line.chomp!.sub(/^.../,'')
-  FileUtils.mkdir_p(File.join(dist, File.dirname(src)))
-  FileUtils.cp(src , File.join(dist, src))
+
+  if File.directory?(src)
+    FileUtils.mkdir_p(File.join(dist, src))
+    FileUtils.cp_r(src, File.join(dist, src))
+  else
+    FileUtils.mkdir_p(File.join(dist, File.dirname(src)))
+    FileUtils.cp(src , File.join(dist, src))
+  end
   puts src
 end
